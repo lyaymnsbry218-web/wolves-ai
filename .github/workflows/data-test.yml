@@ -6,14 +6,15 @@ jobs:
     steps:
       - name: Fetch prices
         env:
-          K: ${{ secrets.TWELVEDATA_API_KEY }}
+          RAW: ${{ secrets.TWELVEDATA_API_KEY }}
         run: |
-          echo "XAU/USD:"
-          curl -s "https://api.twelvedata.com/price?symbol=XAU/USD&apikey=$K"
-          echo
-          echo "XAG/USD:"
-          curl -s "https://api.twelvedata.com/price?symbol=XAG/USD&apikey=$K"
-          echo
+          K=$(printf '%s' "$RAW" | tr -cd 'A-Za-z0-9')
+          echo "key length: ${#K}"
+          for S in XAU/USD XAG/USD; do
+            echo "$S:"
+            curl -sS -G "https://api.twelvedata.com/price" --data-urlencode "symbol=$S" --data-urlencode "apikey=$K" || true
+            echo
+          done
           echo "BTCUSDT:"
-          curl -s "https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT"
+          curl -sS "https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT" || true
           echo
