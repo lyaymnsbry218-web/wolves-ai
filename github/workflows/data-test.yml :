@@ -1,0 +1,19 @@
+name: data-test
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch prices
+        env:
+          K: ${{ secrets.TWELVEDATA_API_KEY }}
+        run: |
+          echo "XAU/USD:"
+          curl -s "https://api.twelvedata.com/price?symbol=XAU/USD&apikey=$K"
+          echo
+          echo "XAG/USD:"
+          curl -s "https://api.twelvedata.com/price?symbol=XAG/USD&apikey=$K"
+          echo
+          echo "BTCUSDT:"
+          curl -s "https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT"
+          echo
